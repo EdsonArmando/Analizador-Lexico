@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,8 @@ namespace Practica1
         RichTextBox texto = new RichTextBox();
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         string path;
+        int cont = 1;
+        static ArrayList list = new ArrayList();
         public Form1()
         {
             InitializeComponent();
@@ -200,6 +203,39 @@ namespace Practica1
         public void enviarToken(string token)
         {
             Console.WriteLine("Token correcto "+ token);
+            if (token.Equals("DIAGRAMA_DE_CLASES")) {
+                list.Add(new Token(cont,1,token,"Reservada",1,1));
+                cont++;
+            }
+        }
+        public void generarTablaSimbolos()
+        {
+            StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaSimbolos.html");
+            archivo.Write("<html>");
+            archivo.Write("<head>");
+            archivo.Write("<style>"
+                    + "table{"
+                    + "  font-family: arial, sans-serif; border-collapse: collapse;    width: 100%;}"
+                    + "td, th{"
+                    + "border: 1px solid #dddddd;text-align: left;  padding: 8px;}"
+                    + "tr:nth-child(even){"
+                    + " background-color: #dddddd;}"
+                    + "</style>");
+            archivo.Write("</head>");
+            archivo.Write("<body>");
+            archivo.Write("<H1>Tabla de Simbolos</H1>");
+            archivo.Write("<br><br>");
+            archivo.Write("<table>");
+            archivo.Write("<tr><th>No</th><th>Token</th><th>Lexema</th><th>Tipo</th><th>Fila</th><th>Columna</th></tr>");
+            foreach (Token i in list)
+            {
+                archivo.Write("<tr><td>" + i.No + "</td><td>" + i.Tokens + "</td><td>" + i.Lexema + "</td><td>" + i.Tipo + "</td><td>" + i.Fila + "</td><td>" + i.Columna +  "</td></tr>");
+            }
+            archivo.Write("</table>");
+            archivo.Write("</body>");
+            archivo.Write("</html>");
+            archivo.Close();
+            Process.Start(@"c:\Users\Armando\Desktop\Ejemplos\tablaSimbolos.html");
         }
 
         public void analizarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -207,6 +243,7 @@ namespace Practica1
             //crearHtml();
             string texto = idTexto.Text;
             Analizador(texto);
+            generarTablaSimbolos();
         }
     }
 }
