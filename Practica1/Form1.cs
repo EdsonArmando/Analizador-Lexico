@@ -21,7 +21,6 @@ namespace Practica1
         int cont = 1;
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
-
         public Form1()
         {
             InitializeComponent();
@@ -99,6 +98,10 @@ namespace Practica1
                             token += concatenar;
                             mover = 6;
                             break;
+                            case '"':
+                                token += concatenar;
+                                mover = 12;
+                                break;
                             case '[':
                                 token += concatenar;
                                 mover = 8;
@@ -113,12 +116,11 @@ namespace Practica1
                                 token += concatenar;
                                 mover = 10;
                                 estadoInical = estadoInical - 1;
-                                break;
+                                break;    
                             default:
                                 mover = 11;
                                 estadoInical = estadoInical - 1;
                                 break;
-
                         }
                         break;
                     case 1:
@@ -242,7 +244,7 @@ namespace Practica1
                         }
                         break;
                     case 5:
-                        enviarToken(token);
+                        enviarToken(token,"RESERVADA");
                         token = "";
                         mover = 0;
                         break;
@@ -279,22 +281,22 @@ namespace Practica1
                         }
                         break;
                     case 7:
-                        enviarToken(token);
+                        enviarToken(token,"RESERVADA");
                         token = "";
                         mover = 0;
                         break;
                     case 8:    
-                        enviarToken(token);
+                        enviarToken(token,"SIMBOLO");
                         token = "";
                         mover = 0;
                         break;
                     case 9:
-                        enviarToken(token);
+                        enviarToken(token,"SIMBOLO");
                         token = "";
                         mover = 0;
                         break;
                     case 10:
-                        enviarToken(token);
+                        enviarToken(token,"SIMBOLO");
                         token = "";
                         mover = 0;
                         break;
@@ -303,44 +305,59 @@ namespace Practica1
                         token = "";
                         mover = 0;
                         break;
+                    case 12:
+                        if (Char.IsLetterOrDigit(concatenar)|| Char.IsSymbol(concatenar))
+                        {
+                            token += concatenar;
+                        }
+                        else if (concatenar == '"')
+                        {
+                            estadoInical = estadoInical - 1;
+                            mover = 13;
+                        }
+                        else {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }
+                        break;
+                    case 13:
+                        enviarToken(token+ "\"", "IDENTIFICADOR");
+                        token = "";
+                        mover = 0;
+                        break;
                 }
             }
         }
 
-        public void enviarToken(string token)
+        public void enviarToken(string token,string tipo)
         {
-            switch (token) {
-                case "DIAGRAMA_DE_CLASES":
-                    listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
-                    cont++;
-                    break;
-                case "CLASE":
-                    listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
-                    cont++;
-                    break;
-                case "[":
-                    listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
-                    cont++;
-                    break;
-                case "]":
-                    listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
-                    cont++;
-                    break;
-                case "*":
-                    listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
-                    cont++;
-                    break;
-                default:
-                    errores(token);
-                    break;
+            if (tipo.Equals("RESERVADA"))
+            {
+                listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
+                cont++;
             }
+            else if (tipo.Equals("SIMBOLO"))
+            {
+                listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
+                cont++;
+            }
+            else if (tipo.Equals("IDENTIFICADOR"))
+            {
+                listToken.Add(new Token(cont, 1, token, "IDENTIFICADOR", 1, 1));
+                cont++;
+            }
+            else {
+                errores(token);
+            }
+            
           
         }
         public void errores(string token) {
             errorToken.Add(token);
         }
         public void generarTablaErrores() {
-            int conts = 0;
+            int conts = 1;
             StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaErrores.html");
             archivo.Write("<html>");
             archivo.Write("<head>");
