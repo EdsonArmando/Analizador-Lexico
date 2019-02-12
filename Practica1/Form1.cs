@@ -19,7 +19,9 @@ namespace Practica1
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         string path;
         int cont = 1;
-        static ArrayList list = new ArrayList();
+        static ArrayList listToken = new ArrayList();
+        static ArrayList errorToken = new ArrayList();
+
         public Form1()
         {
             InitializeComponent();
@@ -93,13 +95,40 @@ namespace Practica1
                                 token += concatenar;
                                 mover = 1;
                                 break;
+                            case 'C':
+                            token += concatenar;
+                            mover = 6;
+                            break;
+                            case '[':
+                                token += concatenar;
+                                mover = 8;
+                                estadoInical = estadoInical - 1;
+                                break;
+                            case ']':
+                                token += concatenar;
+                                mover = 9;
+                                estadoInical = estadoInical - 1;
+                                break;
+                            case '*':
+                                token += concatenar;
+                                mover = 10;
+                                estadoInical = estadoInical - 1;
+                                break;
+                            default:
+                                mover = 11;
+                                estadoInical = estadoInical - 1;
+                                break;
+
                         }
                         break;
                     case 1:
-                        if (concatenar == 'D') {
+                        if (concatenar == 'D')
+                        {
                             token += concatenar;
                             mover = 1;
-                        } else if (concatenar.Equals('I')) {
+                        }
+                        else if (concatenar.Equals('I'))
+                        {
                             token += concatenar;
                             mover = 1;
                         }
@@ -138,6 +167,11 @@ namespace Practica1
                             token += concatenar;
                             mover = 2;
                         }
+                        else {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }
                         break;
                     case 2:
                         if (concatenar == 'D')
@@ -154,6 +188,12 @@ namespace Practica1
                         {
                             token += concatenar;
                             mover = 3;
+                        }
+                        else
+                        {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
                         }
                         break;
                     case 3:
@@ -182,17 +222,84 @@ namespace Practica1
                             token += concatenar;
                             mover = 4;
                         }
+                        else {
+                            errores(token += concatenar);
+                            token ="";
+                            mover = 0;
+                        }
                         break;
                     case 4:
-                         if(concatenar == 'S')
+                        if (concatenar == 'S')
                         {
                             token += concatenar;
                             mover = 5;
                             estadoInical = estadoInical - 1;
                         }
+                        else {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }
                         break;
                     case 5:
                         enviarToken(token);
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 6:
+                        if (concatenar== 'C') {
+                            token += concatenar;
+                            mover = 6;
+                        }
+                        else if(concatenar.Equals('L')){
+                            token += concatenar;
+                            mover = 6;
+                        }
+                        else if (concatenar.Equals('A'))
+                        {
+                            token += concatenar;
+                            mover = 6;
+                        }
+                        else if (concatenar.Equals('S'))
+                        {
+                            token += concatenar;
+                            mover = 6;
+                        }
+                        else if (concatenar.Equals('E'))
+                        {
+                            token += concatenar;
+                            mover = 7;
+                            estadoInical = estadoInical - 1;
+                        }
+                        else
+                        {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }
+                        break;
+                    case 7:
+                        enviarToken(token);
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 8:    
+                        enviarToken(token);
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 9:
+                        enviarToken(token);
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 10:
+                        enviarToken(token);
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 11:
+                        errores(token += concatenar);
                         token = "";
                         mover = 0;
                         break;
@@ -202,14 +309,70 @@ namespace Practica1
 
         public void enviarToken(string token)
         {
-            Console.WriteLine("Token correcto "+ token);
-            if (token.Equals("DIAGRAMA_DE_CLASES")) {
-                list.Add(new Token(cont,1,token,"Reservada",1,1));
-                cont++;
+            switch (token) {
+                case "DIAGRAMA_DE_CLASES":
+                    listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
+                    cont++;
+                    break;
+                case "CLASE":
+                    listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
+                    cont++;
+                    break;
+                case "[":
+                    listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
+                    cont++;
+                    break;
+                case "]":
+                    listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
+                    cont++;
+                    break;
+                case "*":
+                    listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
+                    cont++;
+                    break;
+                default:
+                    errores(token);
+                    break;
             }
+          
+        }
+        public void errores(string token) {
+            errorToken.Add(token);
+        }
+        public void generarTablaErrores() {
+            int conts = 0;
+            StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaErrores.html");
+            archivo.Write("<html>");
+            archivo.Write("<head>");
+            archivo.Write("<style>"
+                    + "table{"
+                    + "  font-family: arial, sans-serif; border-collapse: collapse;    width: 100%;}"
+                    + "td, th{"
+                    + "border: 1px solid #dddddd;text-align: left;  padding: 8px;}"
+                    + "tr:nth-child(even){"
+                    + " background-color: #dddddd;}"
+                    + "</style>");
+            archivo.Write("</head>");
+            archivo.Write("<body>");
+            archivo.Write("<H1>Tabla de Simbolos</H1>");
+            archivo.Write("<br><br>");
+            archivo.Write("<table>");
+            archivo.Write("<tr><th>No</th><th>Error</th><th>Descripcion</th><th>fila</th><th>columna</th></tr>");
+            foreach (string i in errorToken) {
+                archivo.Write("<tr><td>" + conts + "</td><td>" + i + "</td><td>" + "Elemento Léxico Desconocido" + "</td><td>" + conts + "</td><td>" + conts + "</td></tr>" );
+                conts++;
+            }
+            conts++;
+            archivo.Write("</table>");
+            archivo.Write("</body>");
+            archivo.Write("</html>");
+            archivo.Close();
+            Process.Start(@"c:\Users\Armando\Desktop\Ejemplos\tablaErrores.html");
         }
         public void generarTablaSimbolos()
         {
+            string nombre="";
+            int conts = 0;
             StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaSimbolos.html");
             archivo.Write("<html>");
             archivo.Write("<head>");
@@ -227,9 +390,11 @@ namespace Practica1
             archivo.Write("<br><br>");
             archivo.Write("<table>");
             archivo.Write("<tr><th>No</th><th>Token</th><th>Lexema</th><th>Tipo</th><th>Fila</th><th>Columna</th></tr>");
-            foreach (Token i in list)
+            foreach (Token i in listToken)
             {
-                archivo.Write("<tr><td>" + i.No + "</td><td>" + i.Tokens + "</td><td>" + i.Lexema + "</td><td>" + i.Tipo + "</td><td>" + i.Fila + "</td><td>" + i.Columna +  "</td></tr>");
+                conts += i.Tokens;
+                archivo.Write("<tr><td>" + i.No + "</td><td>" + conts + "</td><td>" + i.Lexema + "</td><td>" + i.Tipo + "</td><td>" + i.Fila + "</td><td>" + i.Columna + "</td></tr>");
+                nombre = i.Lexema;
             }
             archivo.Write("</table>");
             archivo.Write("</body>");
@@ -243,7 +408,21 @@ namespace Practica1
             //crearHtml();
             string texto = idTexto.Text;
             Analizador(texto);
+            generarTablaErrores();
             generarTablaSimbolos();
+            pintarTexto();
+        }
+        public void pintarTexto() {
+            int inicio = 0;
+            string texto = idTexto.Text;
+            idTexto.Text = "";
+            idTexto.Text = texto;
+            while (inicio< idTexto.Text.LastIndexOf("DIAGRAMA_DE_CLASES")) {
+                idTexto.Find("DIAGRAMA_DE_CLASES", inicio, idTexto.TextLength, RichTextBoxFinds.None);
+                idTexto.SelectionBackColor = Color.Blue;
+                inicio = idTexto.Text.IndexOf("DIAGRAMA_DE_CLASES", inicio) + 1;
+            }
+           
         }
     }
 }
