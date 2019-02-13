@@ -125,7 +125,7 @@ namespace Practica1
                                 if (Char.IsNumber(concatenar))
                                 {
                                     token += concatenar;
-                                    mover = 19;
+                                    mover = 18;
                                     estadoInical = estadoInical - 1;
                                 }
                                 else {
@@ -433,11 +433,6 @@ namespace Practica1
                             token = "";
                             mover = 0;
                         }                        
-                        break;
-                    case 19:
-                        enviarToken(token, "DIGITO");
-                        token = "";
-                        mover = 0;
                         break;
                 }
             }
