@@ -82,7 +82,7 @@ namespace Practica1
                 concatenar = cadena[estadoInical];
                 switch (mover) {
                     case 0:
-                        switch (concatenar){
+                        switch (concatenar) {
                             case ' ':
                             case '\r':
                             case '\t':
@@ -95,9 +95,9 @@ namespace Practica1
                                 mover = 1;
                                 break;
                             case 'C':
-                            token += concatenar;
-                            mover = 6;
-                            break;
+                                token += concatenar;
+                                mover = 6;
+                                break;
                             case '"':
                                 token += concatenar;
                                 mover = 12;
@@ -116,10 +116,23 @@ namespace Practica1
                                 token += concatenar;
                                 mover = 10;
                                 estadoInical = estadoInical - 1;
-                                break;    
+                                break;
+                            case 'N':
+                                token += concatenar;
+                                mover = 14;
+                                break;
                             default:
-                                mover = 11;
-                                estadoInical = estadoInical - 1;
+                                if (Char.IsNumber(concatenar))
+                                {
+                                    token += concatenar;
+                                    mover = 19;
+                                    estadoInical = estadoInical - 1;
+                                }
+                                else {
+                                    mover = 11;
+                                    estadoInical = estadoInical - 1;
+                                }
+                               
                                 break;
                         }
                         break;
@@ -226,7 +239,7 @@ namespace Practica1
                         }
                         else {
                             errores(token += concatenar);
-                            token ="";
+                            token = "";
                             mover = 0;
                         }
                         break;
@@ -244,16 +257,16 @@ namespace Practica1
                         }
                         break;
                     case 5:
-                        enviarToken(token,"RESERVADA");
+                        enviarToken(token, "RESERVADA");
                         token = "";
                         mover = 0;
                         break;
                     case 6:
-                        if (concatenar== 'C') {
+                        if (concatenar == 'C') {
                             token += concatenar;
                             mover = 6;
                         }
-                        else if(concatenar.Equals('L')){
+                        else if (concatenar.Equals('L')) {
                             token += concatenar;
                             mover = 6;
                         }
@@ -266,6 +279,11 @@ namespace Practica1
                         {
                             token += concatenar;
                             mover = 6;
+                        }
+                        else if (concatenar == 'O')
+                        {
+                            token += concatenar;
+                            mover = 16;
                         }
                         else if (concatenar.Equals('E'))
                         {
@@ -281,22 +299,22 @@ namespace Practica1
                         }
                         break;
                     case 7:
-                        enviarToken(token,"RESERVADA");
+                        enviarToken(token, "RESERVADA");
                         token = "";
                         mover = 0;
                         break;
-                    case 8:    
-                        enviarToken(token,"SIMBOLO");
+                    case 8:
+                        enviarToken(token, "SIMBOLO");
                         token = "";
                         mover = 0;
                         break;
                     case 9:
-                        enviarToken(token,"SIMBOLO");
+                        enviarToken(token, "SIMBOLO");
                         token = "";
                         mover = 0;
                         break;
                     case 10:
-                        enviarToken(token,"SIMBOLO");
+                        enviarToken(token, "SIMBOLO");
                         token = "";
                         mover = 0;
                         break;
@@ -326,12 +344,108 @@ namespace Practica1
                         token = "";
                         mover = 0;
                         break;
+                    case 14:
+                        if (concatenar=='N')
+                        {
+                            token += concatenar;
+                            mover = 14;
+                        }
+                        else if (concatenar == 'O')
+                        {
+                            token += concatenar;
+                            mover = 14;
+                        }
+                        else if (concatenar == 'M')
+                        {
+                            token += concatenar;
+                            mover = 14;
+                        }
+                        else if (concatenar == 'B')
+                        {
+                            token += concatenar;
+                            mover = 14;
+                        }
+                        else if (concatenar == 'R')
+                        {
+                            token += concatenar;
+                            mover = 14;
+                        }
+                        else if (concatenar == 'E')
+                        {
+                            token += concatenar;
+                            mover = 15;
+                            estadoInical = estadoInical - 1;
+                        }
+                        else {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }
+                        break;
+                    case 15:
+                        enviarToken(token, "RESERVADA");
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 16:
+                        if (concatenar == 'D')
+                        {
+                            token += concatenar;
+                            mover = 16;
+                        }
+                        else if (concatenar == 'I')
+                        {
+                            token += concatenar;
+                            mover = 16;
+                        }
+                        else if (concatenar == 'G')
+                        {
+                            token += concatenar;
+                            mover = 16;
+                        }
+                        else if (concatenar == 'O')
+                        {
+                            token += concatenar;
+                            mover = 17;
+                            estadoInical = estadoInical - 1;
+                        }
+                        else
+                        {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }
+                        break;
+                    case 17:
+                        enviarToken(token, "RESERVADA");
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 18:
+                        if (Char.IsNumber(concatenar))
+                        {
+                            enviarToken(token, "DIGITO");
+                            token = "";
+                            mover = 0;
+                        }
+                        else {
+                            errores(token += concatenar);
+                            token = "";
+                            mover = 0;
+                        }                        
+                        break;
+                    case 19:
+                        enviarToken(token, "DIGITO");
+                        token = "";
+                        mover = 0;
+                        break;
                 }
             }
         }
 
         public void enviarToken(string token,string tipo)
         {
+            Console.WriteLine(token);
             if (tipo.Equals("RESERVADA"))
             {
                 listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
@@ -345,6 +459,11 @@ namespace Practica1
             else if (tipo.Equals("IDENTIFICADOR"))
             {
                 listToken.Add(new Token(cont, 1, token, "IDENTIFICADOR", 1, 1));
+                cont++;
+            }
+            else if (tipo.Equals("DIGITO"))
+            {
+                listToken.Add(new Token(cont, 1, token, "DIGITO", 1, 1));
                 cont++;
             }
             else {
