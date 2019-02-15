@@ -21,6 +21,9 @@ namespace Practica1
         int cont = 1;
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
+        string []tokensReservadas = { "DIAGRMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
+        "ENLACE"};
+        string[] Simbolos = { "[","]","*"};
         public Form1()
         {
             InitializeComponent();
@@ -47,6 +50,16 @@ namespace Practica1
                  
         }
 
+        public void analizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //crearHtml();
+            string texto = idTexto.Text;
+            Analizador(texto);
+            generarTablaErrores();
+            generarTablaSimbolos();
+            pintarTexto();
+            generarArchivo(texto);
+        }
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -440,7 +453,7 @@ namespace Practica1
 
         public void enviarToken(string token,string tipo)
         {
-            Console.WriteLine(token);
+            //Console.WriteLine(token);
             if (tipo.Equals("RESERVADA"))
             {
                 listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
@@ -469,6 +482,78 @@ namespace Practica1
         }
         public void errores(string token) {
             errorToken.Add(token);
+        }
+        public void generarArchivo(string cadena) {
+            int pos = 0;
+            int pos2=0;
+            string cadenas="";
+            char variable;
+            string codigo="";
+            string nombre="";
+            for (pos=62;pos<cadena.Length;pos++) {
+                variable = cadena[pos];
+                cadenas += variable;
+                if (cadenas.Equals("*CODIGO]")) {
+                    cadenas = "";
+                }
+                else if(cadenas.Equals("*NOMBRE]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("\n")|| cadenas.Equals("\r") || cadenas.Equals("\t") || cadenas.Equals("\f") || cadenas.Equals(" "))
+                {
+                    cadenas = "";
+                }
+                switch (pos2) {
+                    case 0:
+                        switch (cadenas) {
+                            case "[NOMBRE]":
+                                pos2 = 2;
+                                cadenas = "";
+                                break;
+                            case "[CODIGO]":
+                                pos2 = 1;
+                                cadenas = "";
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 2:
+                        if (variable == '"'|| Char.IsLetter(variable)) 
+                        {
+                                nombre += variable;
+                                pos2 = 2;
+                        }
+                        else if(variable == '[')
+                        {
+                            escribir(codigo, nombre);
+                            cadenas = "";
+                            codigo = "";
+                            nombre = "";
+                            pos2 = 0;
+                        }
+                        break;
+                    case 1 :
+                        if (Char.IsDigit(variable))
+                        {
+                            codigo += variable;
+                            pos2 =1;
+                        }
+                        else if (variable == '[')
+                        {
+                            cadenas = "";
+                            pos2 = 0;
+                        }
+                        break;
+                }
+            }
+        }
+        public void escribir(string codigo, string nombre) {
+           
+                Console.WriteLine("clase" + codigo +
+            " [shape=record label= " + "{" + nombre + "|" + "-" + ":" + "" + "\n" + "" + ":" + "String" + "}" + "]" + ";");
+        
         }
         public void generarTablaErrores() {
             int conts = 1;
@@ -532,16 +617,6 @@ namespace Practica1
             archivo.Write("</html>");
             archivo.Close();
             Process.Start(@"c:\Users\Armando\Desktop\Ejemplos\tablaSimbolos.html");
-        }
-
-        public void analizarToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //crearHtml();
-            string texto = idTexto.Text;
-            Analizador(texto);
-            generarTablaErrores();
-            generarTablaSimbolos();
-            pintarTexto();
         }
         public void pintarTexto() {
             int inicio = 0;
