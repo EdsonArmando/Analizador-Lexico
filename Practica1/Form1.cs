@@ -753,7 +753,7 @@ namespace Practica1
                         else if (variable == '[')
                         {
                             tipo3++;
-                            textDiagr = textDiagr + tipo + "\n";
+                            textDiagr = textDiagr + tipo + "\\n" + "\n";
                             cadenas = "";
                             pos2 = 0;
                             if (tipo3 > 0) {
