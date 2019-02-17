@@ -16,6 +16,7 @@ namespace Practica1
     public partial class Form1 : Form
     {
         RichTextBox texto = new RichTextBox();
+        string textDiagr;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         string path;
         int cont = 1;
@@ -484,35 +485,200 @@ namespace Practica1
             errorToken.Add(token);
         }
         public void generarArchivo(string cadena) {
+            int cont5 = 0;
             int pos = 0;
-            int pos2=0;
+            int pos2=0,contMetodo=0;
+            int tipo3 = 0,nom=0,tipo2=0;
             string cadenas="";
             char variable;
-            string codigo="";
-            string nombre="";
+            string codigo="", enlace = "";
+            string nombre="", visibilidad = "",nombreAt="",tipo="",nombre2="";
+            string tipoRela = "",relacion="";
+            Boolean fin=false;
+            string visMetodo = "", nombreMetodo = "", tipoMetodo = "", parametro="";
+            textDiagr= "digraph D{\n";
+            //pos2 = 62;
             for (pos=62;pos<cadena.Length;pos++) {
                 variable = cadena[pos];
                 cadenas += variable;
-                if (cadenas.Equals("*CODIGO]")) {
-                    cadenas = "";
-                }
-                else if(cadenas.Equals("*NOMBRE]"))
+                if (cadenas.Equals("*CODIGO]"))
                 {
                     cadenas = "";
                 }
-                else if (cadenas.Equals("\n")|| cadenas.Equals("\r") || cadenas.Equals("\t") || cadenas.Equals("\f") || cadenas.Equals(" "))
+                else if (cadenas.Equals("*NOMBRE]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("*ENLACE]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[ATRIBUTOS]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[RELACIONES]"))
+                {
+                    tipo2 =1;
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[RELACION]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*RELACION]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*RELACIONES]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[CLASE]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[ATRIBUTO]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("*NOMBRE]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("*PARAMETROS]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*ATRIBUTO]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*ATRIBUTOS]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*CLASE]"))
+                {
+                    textDiagr = textDiagr + "}\"];"+"\n";
+                    escribir(textDiagr,"");
+                    textDiagr = "";
+                    cadenas = "";
+                    nombre = "";
+                    codigo = "";
+                    enlace = "";
+                    nombreAt = "";
+                    tipo = "";
+                    visibilidad = "";
+                    cont5 = 0;
+                    nom = 0;
+                    tipoRela = "";
+                    tipo3 = 0;
+                    tipo2 = 0;
+                    visMetodo = ""; nombreMetodo = ""; tipoMetodo = ""; parametro = "";
+                }
+                else if (cadenas.Equals("*TIPO]"))
+                {
+                    cadenas = "";
+                } else if (cadenas.Equals("[*DIAGRAMA_DE_CLASES]")) {
+                    escribir("", relacion+ "}");
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("*VISIBILIDAD]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[METODOS]"))
+                {
+                    textDiagr = textDiagr + "| ";
+                    cadenas = "";
+                    tipo2 = 2;
+                    cont5 = 2;
+                    contMetodo = 1;
+                }
+                else if (cadenas.Equals("[*METODOS]"))
+                {
+                    tipo3++;
+                    textDiagr = textDiagr + " " + nombreMetodo + "(" + parametro + ")" + " : " + tipoMetodo + "\n";
+                    if (tipo3 > 0 || nom > 0)
+                    {
+                        tipoMetodo = "";
+                        nombreMetodo = "";
+                        parametro = "";
+                    }
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[METODO]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*METODO]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[ARAMETROS]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[*PARAMETROS]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("\n") || cadenas.Equals("\r") || cadenas.Equals("\t") || cadenas.Equals("\f") || cadenas.Equals(" "))
                 {
                     cadenas = "";
                 }
                 switch (pos2) {
                     case 0:
-                        switch (cadenas) {
+                        switch (cadenas) {                        
                             case "[NOMBRE]":
-                                pos2 = 2;
-                                cadenas = "";
+                                if (cont5 == 0) {
+                                    pos2 = 2;
+                                    cadenas = "";
+                                    cont5++;
+                                } else if (cont5==1) {
+                                    pos2 = 4;
+                                    cadenas = "";
+                                }
+                                else if (cont5 == 2)
+                                {
+                                    pos2 = 8;
+                                    cadenas = "";
+                                }
                                 break;
                             case "[CODIGO]":
                                 pos2 = 1;
+                                cadenas = "";
+                                break;
+                            case "[VISIBILIDAD]":
+                               if (contMetodo == 0) {
+                                    pos2 = 3;
+                                    cadenas = "";
+                                } else if (contMetodo == 1) {
+                                    pos2 = 9;
+                                    cadenas = "";
+                                }
+                                break;
+                            case "[TIPO]":
+                                if (tipo2 == 0) {
+                                    pos2 = 5;
+                                    cadenas = "";
+                                } else if (tipo2==1) {
+                                    pos2 = 6;
+                                    cadenas = "";
+                                }
+                                else if (tipo2 == 2)
+                                {
+                                    pos2 = 10;
+                                    cadenas = "";
+                                }
+                                break;
+                            case "[ENLACE]":
+                                pos2 = 7;
+                                cadenas = "";
+                                break;
+                            case "[PARAMETROS]":
+                                pos2 = 11;
                                 cadenas = "";
                                 break;
                             default:
@@ -520,17 +686,15 @@ namespace Practica1
                         }
                         break;
                     case 2:
-                        if (variable == '"'|| Char.IsLetter(variable)) 
+                        if (Char.IsLetter(variable)) 
                         {
                                 nombre += variable;
                                 pos2 = 2;
                         }
                         else if(variable == '[')
                         {
-                            escribir(codigo, nombre);
+                            textDiagr = textDiagr +"label = \"{" + nombre + "| \n";
                             cadenas = "";
-                            codigo = "";
-                            nombre = "";
                             pos2 = 0;
                         }
                         break;
@@ -542,19 +706,167 @@ namespace Practica1
                         }
                         else if (variable == '[')
                         {
+                            textDiagr = textDiagr+ "clase" +codigo+"  "+ "[shape=record\n";
                             cadenas = "";
                             pos2 = 0;
+                        }
+                        break;
+                    case 3:
+                        if (cadenas.Equals("\"private\""))
+                        {
+                            visibilidad = "-";
+                        } else if (cadenas.Equals("\"public\"")) {
+                            visibilidad = "+";
+                        
+                        }
+                        else if (variable == '[')
+                        {
+                            textDiagr = textDiagr + visibilidad+" ";
+                            cadenas = "";
+                            pos2 = 0;
+                        }
+                        break;
+                    case 4:
+                        if (Char.IsLetter(variable))
+                        {
+                            nombreAt += variable;
+                            pos2 = 4;
+                        }
+                        else if (variable == '[')
+                        {
+                            textDiagr = textDiagr + nombreAt + ": ";
+                            cadenas = "";
+                            pos2 = 0;
+                            nom++;
+                            if (nom>0) {
+                                nombreAt = "";
+                            }
+                            cont5 = 1;
+                        }
+                        break;
+                    case 5:
+                        if (Char.IsLetter(variable))
+                        {
+                            tipo += variable;
+                            pos2 = 5;
+                        }
+                        else if (variable == '[')
+                        {
+                            tipo3++;
+                            textDiagr = textDiagr + tipo + "\n";
+                            cadenas = "";
+                            pos2 = 0;
+                            if (tipo3 > 0) {
+                                tipo = "";
+                            }
+                            tipo2 = 0;
+                        }
+                        break;
+                    case 6:
+                        if (Char.IsLetter(variable))
+                        {
+                            tipoRela += variable;
+                            pos2 = 6;
+                        }
+                        else if (variable == '[')
+                        {
+                            if (tipoRela.Equals("Asociacion")) {
+                                relacion ="[arrowhead=empty];"+ relacion;
+                            } else if (tipoRela.Equals("Agregacion")) {
+                                relacion = "[arrowhead=diamond];"+"\n"+ relacion;
+                            }
+                            cadenas = "";
+                            pos2 = 0; 
+                        }
+                        break;
+                    case 7:
+                        if (Char.IsDigit(variable))
+                        {
+                            enlace += variable;
+                            pos2 = 7;
+                        }
+                        else if (variable == '[')
+                        {
+                            relacion = "clase"+codigo+ "->"+"clase"+enlace+" "+ relacion + "\n";
+                            cadenas = "";
+                            pos2 = 0;
+                        }
+                        break;
+                    case 8:
+                        if (Char.IsLetter(variable))
+                        {
+                            nombreMetodo += variable;
+                            pos2 = 8;
+                        }
+                        else if (variable == '[')
+                        {
+                            //textDiagr =  textDiagr +" "+ nombreMetodo+"()"+" : " ;
+                            cadenas = "";
+                            pos2 = 0;
+                            nom++;
+                            /*if (nom > 0)
+                            {
+                                nombreMetodo = "";
+                            }*/
+                        }
+                        break;
+                    case 9:
+                        if (cadenas.Equals("\"private\""))
+                        {
+                            visMetodo = "-";
+                        }
+                        else if (cadenas.Equals("\"public\""))
+                        {
+                            visMetodo = "+";
+
+                        }
+                        else if (variable == '[')
+                        {
+                            textDiagr = textDiagr + visMetodo + " ";
+                            cadenas = "";
+                            pos2 = 0;
+                        }
+                        break;
+                    case 10:
+                        if (Char.IsLetter(variable))
+                        {
+                            tipoMetodo += variable;
+                            pos2 = 10;
+                        }
+                        else if (variable == '[')
+                        {
+                            tipo3++;
+                            //textDiagr = textDiagr + tipoMetodo + "\n";
+                            cadenas = "";
+                            pos2 = 0;
+                           /* if (tipo3 > 0)
+                            {
+                                tipoMetodo = "";
+                            }*/
+                        }
+                        break;
+                    case 11:
+                        if (Char.IsLetter(variable))
+                        {
+                            parametro += variable;
+                            pos2 = 11;
+                        }
+                        else if (variable == '[')
+                        {
+                           
+                            cadenas = "";
+                            pos2 = 0;
+                           
                         }
                         break;
                 }
             }
         }
-        public void escribir(string codigo, string nombre) {
-           
-                Console.WriteLine("clase" + codigo +
-            " [shape=record label= " + "{" + nombre + "|" + "-" + ":" + "" + "\n" + "" + ":" + "String" + "}" + "]" + ";");
-        
+        public void escribir(string text,string relacion) {
+            text = text + ""+ relacion;
+            Console.WriteLine(text);
         }
+       
         public void generarTablaErrores() {
             int conts = 1;
             StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaErrores.html");
