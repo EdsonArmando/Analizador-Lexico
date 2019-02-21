@@ -20,10 +20,12 @@ namespace Practica1
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         string path;
         int cont = 1;
+        int conAnali = 0;
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
         string []tokensReservadas = { "DIAGRMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
         "ENLACE"};
+        StreamWriter dotArchivo = new StreamWriter(@"C:\Users\Armando\source\repos\Practica1\Practica1\bin\Debug\diagrama.dot");
         string[] Simbolos = { "[","]","*"};
         public Form1()
         {
@@ -53,13 +55,14 @@ namespace Practica1
 
         public void analizarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //crearHtml();
             string texto = idTexto.Text;
             Analizador(texto);
             generarTablaErrores();
             generarTablaSimbolos();
             pintarTexto();
             generarArchivo(texto);
+            crearHtml();
+            conAnali++;
         }
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -80,11 +83,10 @@ namespace Practica1
             archivo.Write("</head>");
             archivo.Write("<body>");
             archivo.Write("<H1>Diagrama de clases</H1>");
-            archivo.Write("<img src=\"C:\\Users\\Armando\\Desktop\\Ejemplos\\graf.png\"");
+            archivo.Write("<img src=\"C:\\Users\\Armando\\source\\repos\\Practica1\\Practica1\\bin\\Debug\\diagrama.png\"");
             archivo.Write("</body>");
             archivo.Write("</html>");
             archivo.Close();
-            Console.WriteLine("Se ha generado el html");
             Process.Start(@"c:\Users\Armando\Desktop\Ejemplos\ImagenUml.html");
         }
         public void Analizador(string cadena){
@@ -561,7 +563,7 @@ namespace Practica1
                 else if (cadenas.Equals("[*CLASE]"))
                 {
                     textDiagr = textDiagr + "}\"];"+"\n";
-                    escribir(textDiagr,"");
+                    escribir(textDiagr,"",true);
                     textDiagr = "";
                     cadenas = "";
                     nombre = "";
@@ -581,8 +583,22 @@ namespace Practica1
                 {
                     cadenas = "";
                 } else if (cadenas.Equals("[*DIAGRAMA_DE_CLASES]")) {
-                    escribir("", relacion+ "}");
+                    escribir("", relacion+ "}",false);
                     cadenas = "";
+                    textDiagr = "";
+                    cadenas = "";
+                    nombre = "";
+                    codigo = "";
+                    enlace = "";
+                    nombreAt = "";
+                    tipo = "";
+                    visibilidad = "";
+                    cont5 = 0;
+                    nom = 0;
+                    tipoRela = "";
+                    tipo3 = 0;
+                    tipo2 = 0;
+                    visMetodo = ""; nombreMetodo = ""; tipoMetodo = ""; parametro = "";
                 }
                 else if (cadenas.Equals("*VISIBILIDAD]"))
                 {
@@ -862,11 +878,34 @@ namespace Practica1
                 }
             }
         }
-        public void escribir(string text,string relacion) {
-            text = text + ""+ relacion;
-            Console.WriteLine(text);
+        public void escribir(string text, string relacion, bool terminado)
+        {
+            text = text + "" + relacion;
+            if (terminado == true)
+            {
+                dotArchivo.Write(text + "" + relacion);
+            }
+            else if (terminado == false)
+            {
+                dotArchivo.Write("" + relacion);
+                dotArchivo.Close();
+                ExecuteCommand(@"dot -Tpng diagrama.dot -o diagrama.png");
+            }
         }
-       
+
+        static void ExecuteCommand(string _Command)
+        {
+            System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c " + _Command);
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = false;
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo = procStartInfo;
+            proc.Start();
+            string result = proc.StandardOutput.ReadToEnd();
+            Console.WriteLine(result);
+        }
+
         public void generarTablaErrores() {
             int conts = 1;
             StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaErrores.html");
@@ -882,7 +921,7 @@ namespace Practica1
                     + "</style>");
             archivo.Write("</head>");
             archivo.Write("<body>");
-            archivo.Write("<H1>Tabla de Simbolos</H1>");
+            archivo.Write("<H1>Tabla de Errores</H1>");
             archivo.Write("<br><br>");
             archivo.Write("<table>");
             archivo.Write("<tr><th>No</th><th>Error</th><th>Descripcion</th><th>fila</th><th>columna</th></tr>");
