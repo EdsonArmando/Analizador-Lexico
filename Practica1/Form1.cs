@@ -21,6 +21,7 @@ namespace Practica1
         string path;
         int cont = 1;
         int conAnali = 0;
+        string nombre2="";
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
         string []tokensReservadas = { "DIAGRMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
@@ -82,7 +83,7 @@ namespace Practica1
             archivo.Write("<head>");
             archivo.Write("</head>");
             archivo.Write("<body>");
-            archivo.Write("<H1>Diagrama de clases</H1>");
+            archivo.Write("<H1>Diagrama de clases: "+ nombre2 + " </H1>");
             archivo.Write("<img src=\"C:\\Users\\Armando\\source\\repos\\Practica1\\Practica1\\bin\\Debug\\diagrama.png\"");
             archivo.Write("</body>");
             archivo.Write("</html>");
@@ -487,21 +488,22 @@ namespace Practica1
             errorToken.Add(token);
         }
         public void generarArchivo(string cadena) {
+            nombre2 = "";
             dotArchivo = new StreamWriter(@"C:\Users\Armando\source\repos\Practica1\Practica1\bin\Debug\diagrama.dot");
-            int cont5 = 0;
+            int cont5 = -1;
             int pos = 0;
             int pos2=0,contMetodo=0;
             int tipo3 = 0,nom=0,tipo2=0;
             string cadenas="";
             char variable;
             string codigo="", enlace = "";
-            string nombre="", visibilidad = "",nombreAt="",tipo="",nombre2="";
+            string nombre="", visibilidad = "",nombreAt="",tipo="";
             string tipoRela = "",relacion="";
             Boolean fin=false;
             string visMetodo = "", nombreMetodo = "", tipoMetodo = "", parametro="";
             textDiagr= "digraph D{\n";
             //pos2 = 62;
-            for (pos=62;pos<cadena.Length;pos++) {
+            for (pos=0;pos<cadena.Length;pos++) {
                 variable = cadena[pos];
                 cadenas += variable;
                 if (cadenas.Equals("*CODIGO]"))
@@ -509,6 +511,10 @@ namespace Practica1
                     cadenas = "";
                 }
                 else if (cadenas.Equals("*NOMBRE]"))
+                {
+                    cadenas = "";
+                }
+                else if (cadenas.Equals("[DIAGRAMA_DE_CLASES]"))
                 {
                     cadenas = "";
                 }
@@ -660,6 +666,11 @@ namespace Practica1
                                 else if (cont5 == 2)
                                 {
                                     pos2 = 8;
+                                    cadenas = "";
+                                }
+                                else if (cont5 == -1)
+                                {
+                                    pos2 = 12;
                                     cadenas = "";
                                 }
                                 break;
@@ -876,6 +887,19 @@ namespace Practica1
                            
                         }
                         break;
+                    case 12:
+                        if (Char.IsLetter(variable))
+                        {
+                            nombre2 += variable;
+                            pos2 = 12;
+                        }
+                        else if (variable == '[')
+                        {
+                            cadenas = "";
+                            pos2 = 0;
+                            cont5 = 0;
+                        }
+                        break;
                 }
             }
         }
@@ -906,7 +930,6 @@ namespace Practica1
             string result = proc.StandardOutput.ReadToEnd();
             Console.WriteLine(result);
         }
-
         public void generarTablaErrores() {
             int conts = 1;
             StreamWriter archivo = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\tablaErrores.html");
