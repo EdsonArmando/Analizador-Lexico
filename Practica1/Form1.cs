@@ -25,7 +25,7 @@ namespace Practica1
         static ArrayList errorToken = new ArrayList();
         string []tokensReservadas = { "DIAGRMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
         "ENLACE"};
-        StreamWriter dotArchivo = new StreamWriter(@"C:\Users\Armando\source\repos\Practica1\Practica1\bin\Debug\diagrama.dot");
+        StreamWriter dotArchivo;
         string[] Simbolos = { "[","]","*"};
         public Form1()
         {
@@ -487,6 +487,7 @@ namespace Practica1
             errorToken.Add(token);
         }
         public void generarArchivo(string cadena) {
+            dotArchivo = new StreamWriter(@"C:\Users\Armando\source\repos\Practica1\Practica1\bin\Debug\diagrama.dot");
             int cont5 = 0;
             int pos = 0;
             int pos2=0,contMetodo=0;
