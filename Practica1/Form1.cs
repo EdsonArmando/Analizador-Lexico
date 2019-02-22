@@ -60,10 +60,11 @@ namespace Practica1
             Analizador(texto);
             generarTablaErrores();
             generarTablaSimbolos();
-            pintarTexto();
-            generarArchivo(texto);
-            crearHtml();
+            //pintarTexto();
+            //generarArchivo(texto);
+            //crearHtml();
             conAnali++;
+            listToken.Clear();
         }
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -93,6 +94,8 @@ namespace Practica1
         public void Analizador(string cadena){
             int estadoInical = 0;
             int mover = 0;
+            int fila = 1;
+            int columna = 1;
             char concatenar;
             string token="";
             for (estadoInical = 0; estadoInical < cadena.Length; estadoInical++){
@@ -103,328 +106,55 @@ namespace Practica1
                             case ' ':
                             case '\r':
                             case '\t':
-                            case '\n':
                             case '\f':
                                 mover = 0;
                                 break;
-                            case 'D':
-                                token += concatenar;
-                                mover = 1;
-                                break;
-                            case 'C':
-                                token += concatenar;
-                                mover = 6;
+                            case '\n':
+                                fila++;
+                                mover = 0;
                                 break;
                             case '"':
                                 token += concatenar;
-                                mover = 12;
+                                mover = 1;
                                 break;
                             case '[':
                                 token += concatenar;
-                                mover = 8;
+                                mover = 2;
                                 estadoInical = estadoInical - 1;
                                 break;
                             case ']':
                                 token += concatenar;
-                                mover = 9;
+                                mover = 3;
                                 estadoInical = estadoInical - 1;
                                 break;
                             case '*':
                                 token += concatenar;
-                                mover = 10;
+                                mover = 4;
                                 estadoInical = estadoInical - 1;
-                                break;
-                            case 'N':
-                                token += concatenar;
-                                mover = 14;
                                 break;
                             default:
                                 if (Char.IsNumber(concatenar))
                                 {
                                     token += concatenar;
-                                    mover = 18;
+                                    mover = 5;
                                     estadoInical = estadoInical - 1;
                                 }
                                 else {
-                                    mover = 11;
+                                    mover = 6;
                                     estadoInical = estadoInical - 1;
                                 }
-                               
                                 break;
                         }
                         break;
                     case 1:
-                        if (concatenar == 'D')
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('I'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('A'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('G'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('R'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('A'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('M'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar.Equals('A'))
-                        {
-                            token += concatenar;
-                            mover = 1;
-                        }
-                        else if (concatenar == '_')
-                        {
-                            token += concatenar;
-                            mover = 2;
-                        }
-                        else {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 2:
-                        if (concatenar == 'D')
-                        {
-                            token += concatenar;
-                            mover = 2;
-                        }
-                        else if (concatenar.Equals('E'))
-                        {
-                            token += concatenar;
-                            mover = 2;
-                        }
-                        else if (concatenar == '_')
-                        {
-                            token += concatenar;
-                            mover = 3;
-                        }
-                        else
-                        {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 3:
-                        if (concatenar == 'C')
-                        {
-                            token += concatenar;
-                            mover = 3;
-                        }
-                        else if (concatenar.Equals('L'))
-                        {
-                            token += concatenar;
-                            mover = 3;
-                        }
-                        else if (concatenar.Equals('A'))
-                        {
-                            token += concatenar;
-                            mover = 3;
-                        }
-                        else if (concatenar.Equals('S'))
-                        {
-                            token += concatenar;
-                            mover = 3;
-                        }
-                        else if (concatenar == 'E')
-                        {
-                            token += concatenar;
-                            mover = 4;
-                        }
-                        else {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 4:
-                        if (concatenar == 'S')
-                        {
-                            token += concatenar;
-                            mover = 5;
-                            estadoInical = estadoInical - 1;
-                        }
-                        else {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 5:
-                        enviarToken(token, "RESERVADA");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 6:
-                        if (concatenar == 'C') {
-                            token += concatenar;
-                            mover = 6;
-                        }
-                        else if (concatenar.Equals('L')) {
-                            token += concatenar;
-                            mover = 6;
-                        }
-                        else if (concatenar.Equals('A'))
-                        {
-                            token += concatenar;
-                            mover = 6;
-                        }
-                        else if (concatenar.Equals('S'))
-                        {
-                            token += concatenar;
-                            mover = 6;
-                        }
-                        else if (concatenar == 'O')
-                        {
-                            token += concatenar;
-                            mover = 16;
-                        }
-                        else if (concatenar.Equals('E'))
-                        {
-                            token += concatenar;
-                            mover = 7;
-                            estadoInical = estadoInical - 1;
-                        }
-                        else
-                        {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 7:
-                        enviarToken(token, "RESERVADA");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 8:
-                        enviarToken(token, "SIMBOLO");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 9:
-                        enviarToken(token, "SIMBOLO");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 10:
-                        enviarToken(token, "SIMBOLO");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 11:
-                        errores(token += concatenar);
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 12:
-                        if (Char.IsLetterOrDigit(concatenar)|| Char.IsSymbol(concatenar))
+                        if (Char.IsLetterOrDigit(concatenar) || Char.IsSymbol(concatenar))
                         {
                             token += concatenar;
                         }
                         else if (concatenar == '"')
                         {
                             estadoInical = estadoInical - 1;
-                            mover = 13;
-                        }
-                        else {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 13:
-                        enviarToken(token+ "\"", "IDENTIFICADOR");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 14:
-                        if (concatenar=='N')
-                        {
-                            token += concatenar;
-                            mover = 14;
-                        }
-                        else if (concatenar == 'O')
-                        {
-                            token += concatenar;
-                            mover = 14;
-                        }
-                        else if (concatenar == 'M')
-                        {
-                            token += concatenar;
-                            mover = 14;
-                        }
-                        else if (concatenar == 'B')
-                        {
-                            token += concatenar;
-                            mover = 14;
-                        }
-                        else if (concatenar == 'R')
-                        {
-                            token += concatenar;
-                            mover = 14;
-                        }
-                        else if (concatenar == 'E')
-                        {
-                            token += concatenar;
-                            mover = 15;
-                            estadoInical = estadoInical - 1;
-                        }
-                        else {
-                            errores(token += concatenar);
-                            token = "";
-                            mover = 0;
-                        }
-                        break;
-                    case 15:
-                        enviarToken(token, "RESERVADA");
-                        token = "";
-                        mover = 0;
-                        break;
-                    case 16:
-                        if (concatenar == 'D')
-                        {
-                            token += concatenar;
-                            mover = 16;
-                        }
-                        else if (concatenar == 'I')
-                        {
-                            token += concatenar;
-                            mover = 16;
-                        }
-                        else if (concatenar == 'G')
-                        {
-                            token += concatenar;
-                            mover = 16;
-                        }
-                        else if (concatenar == 'O')
-                        {
-                            token += concatenar;
-                            mover = 17;
-                            estadoInical = estadoInical - 1;
+                            mover = 7;
                         }
                         else
                         {
@@ -433,49 +163,78 @@ namespace Practica1
                             mover = 0;
                         }
                         break;
-                    case 17:
-                        enviarToken(token, "RESERVADA");
+                    case 2:
+                        enviarToken(token, "SIMBOLO",fila,columna);
+                        columna++;
                         token = "";
                         mover = 0;
                         break;
-                    case 18:
+                    case 3:
+                        enviarToken(token, "SIMBOLO",fila, columna);
+                        columna++;
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 4:
+                        enviarToken(token, "SIMBOLO",fila, columna);
+                        columna++;
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 6:
+                        errores(token += concatenar);
+                        columna++;
+                        token = "";
+                        mover = 0;
+                        break;
+                    case 5:
                         if (Char.IsNumber(concatenar))
                         {
-                            enviarToken(token, "DIGITO");
+                            enviarToken(token, "DIGITO",fila, columna);
+                            columna++;
                             token = "";
                             mover = 0;
                         }
-                        else {
+                        else
+                        {
                             errores(token += concatenar);
+                            columna++;
                             token = "";
                             mover = 0;
-                        }                        
+                        }
                         break;
+                    case 7:
+                        enviarToken(token+ "\"", "IDENTIFICADOR",fila, columna);
+                        columna++;
+                        token = "";
+                        mover = 0;
+                        break;
+                   
                 }
             }
         }
 
-        public void enviarToken(string token,string tipo)
+        public void enviarToken(string token,string tipo,int fila,int columna)
         {
             //Console.WriteLine(token);
             if (tipo.Equals("RESERVADA"))
             {
-                listToken.Add(new Token(cont, 1, token, "Reservada", 1, 1));
+                listToken.Add(new Token(cont, 1, token, "Reservada", fila, columna));
                 cont++;
             }
             else if (tipo.Equals("SIMBOLO"))
             {
-                listToken.Add(new Token(cont, 1, token, "SIMBOLO", 1, 1));
+                listToken.Add(new Token(cont, 1, token, "SIMBOLO", fila, columna));
                 cont++;
             }
             else if (tipo.Equals("IDENTIFICADOR"))
             {
-                listToken.Add(new Token(cont, 1, token, "IDENTIFICADOR", 1, 1));
+                listToken.Add(new Token(cont, 1, token, "IDENTIFICADOR", fila, columna));
                 cont++;
             }
             else if (tipo.Equals("DIGITO"))
             {
-                listToken.Add(new Token(cont, 1, token, "DIGITO", 1, 1));
+                listToken.Add(new Token(cont, 1, token, "DIGITO", fila, columna));
                 cont++;
             }
             else {
