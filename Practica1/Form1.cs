@@ -25,7 +25,7 @@ namespace Practica1
         string nombre2="";
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
-        string []tokensReservadas = { "DIAGRMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
+        string []tokensReservadas = { "DIAGRAMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
         "ENLACE"};
         StreamWriter dotArchivo;
         string[] Simbolos = { "[","]","*"};
@@ -66,6 +66,7 @@ namespace Practica1
             //crearHtml();
             conAnali++;
             listToken.Clear();
+            errorToken.Clear();
         }
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -141,6 +142,10 @@ namespace Practica1
                                     mover = 5;
                                     estadoInical = estadoInical - 1;
                                 }
+                                else if (Char.IsLetter(concatenar)) {
+                                    mover = 8;
+                                    estadoInical = estadoInical - 1;
+                                }
                                 else {
                                     mover = 6;
                                     estadoInical = estadoInical - 1;
@@ -212,11 +217,40 @@ namespace Practica1
                         token = "";
                         mover = 0;
                         break;
+                    case 8:
+                        if (Char.IsLetter(concatenar)||Char.IsSymbol(concatenar)|| concatenar=='_' )
+                        {
+                            token += concatenar;
+                            mover = 8;
+                        }
+                        else {
+                            verificarReservadas(token, fila, columna);
+                            columna++;
+                            token = "";
+                            estadoInical = estadoInical - 1;
+                            mover = 0;
+                        }
+                        break;
                    
                 }
             }
         }
+        public void verificarReservadas(string token,int fila, int columna) {
+            string nombre="";
+            for (int i=0;i<tokensReservadas.Length;i++) {
+                nombre = tokensReservadas[i];
+                if (token.Equals(nombre))
+                {
+                    enviarToken(token, "RESERVADA", fila, columna);
+                    i = tokensReservadas.Length+1;
+                }
+                else {
+                   errores(token, fila, columna);
+                }
+            }
+            Console.WriteLine(token);
 
+        }
         public void enviarToken(string token,string tipo,int fila,int columna)
         {
             //Console.WriteLine(token);
