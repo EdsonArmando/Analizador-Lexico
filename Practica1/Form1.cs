@@ -237,19 +237,20 @@ namespace Practica1
         }
         public void verificarReservadas(string token,int fila, int columna) {
             string nombre="";
+            bool uno = false;
             for (int i=0;i<tokensReservadas.Length;i++) {
                 nombre = tokensReservadas[i];
                 if (token.Equals(nombre))
                 {
-                    enviarToken(token, "RESERVADA", fila, columna);
                     i = tokensReservadas.Length+1;
-                }
-                else {
-                   errores(token, fila, columna);
+                    uno = true;
                 }
             }
-            Console.WriteLine(token);
-
+            if (uno == true) {
+                enviarToken(token, "RESERVADA", fila, columna);
+            } else if (uno == false) {
+                errores(token, fila, columna);
+            }
         }
         public void enviarToken(string token,string tipo,int fila,int columna)
         {
