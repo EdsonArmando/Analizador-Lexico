@@ -21,6 +21,7 @@ namespace Practica1
         string path;
         int cont = 1;
         int conAnali = 0;
+        int error = 1;
         string nombre2="";
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
@@ -111,6 +112,7 @@ namespace Practica1
                                 break;
                             case '\n':
                                 fila++;
+                                columna = 1;
                                 mover = 0;
                                 break;
                             case '"':
@@ -158,7 +160,8 @@ namespace Practica1
                         }
                         else
                         {
-                            errores(token += concatenar);
+                            errores(token += concatenar,fila,columna);
+                            columna++;
                             token = "";
                             mover = 0;
                         }
@@ -182,7 +185,7 @@ namespace Practica1
                         mover = 0;
                         break;
                     case 6:
-                        errores(token += concatenar);
+                        errores(token += concatenar, fila, columna);
                         columna++;
                         token = "";
                         mover = 0;
@@ -197,7 +200,7 @@ namespace Practica1
                         }
                         else
                         {
-                            errores(token += concatenar);
+                            errores(token += concatenar, fila, columna);
                             columna++;
                             token = "";
                             mover = 0;
@@ -238,13 +241,13 @@ namespace Practica1
                 cont++;
             }
             else {
-                errores(token);
+                //errores(token);
             }
             
           
         }
-        public void errores(string token) {
-            errorToken.Add(token);
+        public void errores(string token,int fila,int columna) {
+            errorToken.Add(new ErrorToken(error,token,"Error lexico desconocido",fila,columna));
         }
         public void generarArchivo(string cadena) {
             nombre2 = "";
@@ -714,8 +717,8 @@ namespace Practica1
             archivo.Write("<br><br>");
             archivo.Write("<table>");
             archivo.Write("<tr><th>No</th><th>Error</th><th>Descripcion</th><th>fila</th><th>columna</th></tr>");
-            foreach (string i in errorToken) {
-                archivo.Write("<tr><td>" + conts + "</td><td>" + i + "</td><td>" + "Elemento Léxico Desconocido" + "</td><td>" + conts + "</td><td>" + conts + "</td></tr>" );
+            foreach (ErrorToken i in errorToken) {
+                archivo.Write("<tr><td>" + i.No + "</td><td>" + i.Tokens + "</td><td>" + "Elemento Léxico Desconocido" + "</td><td>" + i.Fila + "</td><td>" + i.Columna + "</td></tr>" );
                 conts++;
             }
             conts++;

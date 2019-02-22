@@ -52,6 +52,7 @@
     <Compile Include="AcercaDe.Designer.cs">
       <DependentUpon>AcercaDe.cs</DependentUpon>
     </Compile>
+    <Compile Include="ErrorToken.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
