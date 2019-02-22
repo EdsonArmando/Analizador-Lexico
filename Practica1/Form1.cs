@@ -561,7 +561,13 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[*ATRIBUTO]"))
                 {
+
                     cadenas = "";
+                    //textDiagr = textDiagr + visibilidad+" ";  // = textDiagr + nombreAt + ": "; //textDiagr = textDiagr + tipo + "\\n" + "\n";
+                    textDiagr = textDiagr + visibilidad + " " + nombreAt + ": " + tipo + "\\n" + "\n";
+                    visibilidad = "";
+                    nombreAt = "";
+                    tipo = "";
                 }
                 else if (cadenas.Equals("[*ATRIBUTOS]"))
                 {
@@ -749,7 +755,7 @@ namespace Practica1
                         }
                         else if (variable == '[')
                         {
-                            textDiagr = textDiagr + visibilidad+" ";
+                            //textDiagr = textDiagr + visibilidad+" ";
                             cadenas = "";
                             pos2 = 0;
                         }
@@ -762,12 +768,12 @@ namespace Practica1
                         }
                         else if (variable == '[')
                         {
-                            textDiagr = textDiagr + nombreAt + ": ";
+                            // = textDiagr + nombreAt + ": ";
                             cadenas = "";
                             pos2 = 0;
                             nom++;
                             if (nom>0) {
-                                nombreAt = "";
+                                //nombreAt = "";
                             }
                             cont5 = 1;
                         }
@@ -781,11 +787,11 @@ namespace Practica1
                         else if (variable == '[')
                         {
                             tipo3++;
-                            textDiagr = textDiagr + tipo + "\\n" + "\n";
+                            //textDiagr = textDiagr + tipo + "\\n" + "\n";
                             cadenas = "";
                             pos2 = 0;
                             if (tipo3 > 0) {
-                                tipo = "";
+                                //tipo = "";
                             }
                             tipo2 = 0;
                         }
