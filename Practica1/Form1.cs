@@ -62,10 +62,12 @@ namespace Practica1
             Analizador(texto);
             generarTablaErrores();
             generarTablaSimbolos();
-            pintarTexto();
+            pintarTexto(texto);
             conAnali++;
             listToken.Clear();
             errorToken.Clear();
+            //pintarCorchete();
+            //pintaAsterisco();
             contError = 0;
             cont = 1;
         }
@@ -123,17 +125,23 @@ namespace Practica1
                                 break;
                             case '[':
                                 token += concatenar;
+                                idTexto.Find(token, estadoInical, idTexto.TextLength, RichTextBoxFinds.None);
+                                idTexto.SelectionBackColor = Color.Red;
                                 mover = 2;
                                 estadoInical = estadoInical - 1;
                                 break;
                             case ']':
                                 token += concatenar;
                                 mover = 3;
+                                idTexto.Find(token, estadoInical, idTexto.TextLength, RichTextBoxFinds.None);
+                                idTexto.SelectionBackColor = Color.Red;
                                 estadoInical = estadoInical - 1;
                                 break;
                             case '*':
                                 token += concatenar;
                                 mover = 4;
+                                idTexto.Find(token, estadoInical, idTexto.TextLength, RichTextBoxFinds.None);
+                                idTexto.SelectionBackColor = Color.Yellow;
                                 estadoInical = estadoInical - 1;
                                 break;
                             default:
@@ -141,6 +149,8 @@ namespace Practica1
                                 {
                                     token += concatenar;
                                     mover = 5;
+                                    idTexto.Find(token, estadoInical, idTexto.TextLength, RichTextBoxFinds.None);
+                                    idTexto.SelectionBackColor = Color.Orange;
                                     estadoInical = estadoInical - 1;
                                 }
                                 else if (Char.IsLetter(concatenar)) {
@@ -161,6 +171,8 @@ namespace Practica1
                         }
                         else if (concatenar == '"')
                         {
+                            idTexto.Find(token, estadoInical, idTexto.TextLength, RichTextBoxFinds.None);
+                            idTexto.SelectionBackColor = Color.Green;
                             estadoInical = estadoInical - 1;
                             mover = 7;
                         }
@@ -192,6 +204,8 @@ namespace Practica1
                         mover = 0;
                         break;
                     case 6:
+                        idTexto.Find(token, estadoInical, idTexto.TextLength, RichTextBoxFinds.None);
+                        idTexto.SelectionBackColor = Color.Black;
                         errores(token += concatenar, fila, columna);
                         columna++;
                         contError++;
@@ -806,17 +820,24 @@ namespace Practica1
             archivo.Close();
             Process.Start(@"c:\Users\Armando\Desktop\Ejemplos\tablaSimbolos.html");
         }
-        public void pintarTexto() {
-            int inicio = 0;
-            string texto = idTexto.Text;
-            idTexto.Text = "";
-            idTexto.Text = texto;
-            while (inicio< idTexto.Text.LastIndexOf("DIAGRAMA_DE_CLASES")) {
-                idTexto.Find("DIAGRAMA_DE_CLASES", inicio, idTexto.TextLength, RichTextBoxFinds.None);
-                idTexto.SelectionBackColor = Color.Blue;
-                inicio = idTexto.Text.IndexOf("DIAGRAMA_DE_CLASES", inicio) + 1;
-            }
+        public void pintarTexto(string texto) {
            
+            string nombre = "";
+            for (int i = 0; i < tokensReservadas.Length; i++)
+            {
+                nombre = tokensReservadas[i];
+                pintar(nombre);
+            }
+
+        }
+        private void pintar(string nombre) {
+            int inicio = 0;
+            while (inicio < idTexto.Text.LastIndexOf(nombre))
+            {
+                idTexto.Find(nombre, inicio, idTexto.TextLength, RichTextBoxFinds.None);
+                idTexto.SelectionBackColor = Color.Blue;
+                inicio = idTexto.Text.IndexOf(nombre, inicio) + 1;
+            }
         }
     }
 }
