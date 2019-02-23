@@ -73,7 +73,7 @@ namespace Practica1
         {
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             
-            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "ddc files (*.ddc)|*.ddc|All files (*.*)|*.*";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string name = saveFileDialog1.FileName;
@@ -835,6 +835,28 @@ namespace Practica1
                 idTexto.Find(nombre, inicio, idTexto.TextLength, RichTextBoxFinds.None);
                 idTexto.SelectionBackColor = Color.Blue;
                 inicio = idTexto.Text.IndexOf(nombre, inicio) + 1;
+            }
+        }
+
+        private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StreamWriter archivo = new StreamWriter(path);
+            archivo.Write(idTexto.Text);
+            archivo.Close();
+            MessageBox.Show("Se ha guardado satisfactoriamente");
+
+        }
+        private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            OpenFileDialog file = new OpenFileDialog();
+            file.Filter = "ddc files (*.ddc)|*.ddc|All files (*.*)|*.*";
+            if (file.ShowDialog() == DialogResult.OK)
+            {
+                path = file.FileName;
+                String texto = File.ReadAllText(path);
+                idTexto.Text = "\t" + texto;
+                //Console.WriteLine(path);
             }
         }
     }

@@ -53,6 +53,7 @@ namespace Practica1
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
             this.guardarToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.guardarToolStripMenuItem.Text = "Guardar";
+            this.guardarToolStripMenuItem.Click += new System.EventHandler(this.guardarToolStripMenuItem_Click);
             // 
             // guardarComoToolStripMenuItem
             // 
@@ -135,18 +136,7 @@ namespace Practica1
         private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem;
         private System.Windows.Forms.RichTextBox idTexto;
 
-        private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-            OpenFileDialog file = new OpenFileDialog();
-            file.Filter = "ddc files (*.ddc)|*.ddc|All files (*.*)|*.*";
-            if (file.ShowDialog() == DialogResult.OK)
-            {
-                path = file.FileName;
-                String texto = File.ReadAllText(path);
-                idTexto.Text = "\t"+texto;
-            }
-        }
+        
         private void salirToolStripMenuItem_Click_1(object sender, EventArgs e) { 
             Close();
         }
