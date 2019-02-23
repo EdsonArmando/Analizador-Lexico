@@ -22,10 +22,11 @@ namespace Practica1
         int cont = 1;
         int conAnali = 0;
         int error = 1;
+        int contError = 0;
         string nombre2="";
         static ArrayList listToken = new ArrayList();
         static ArrayList errorToken = new ArrayList();
-        string []tokensReservadas = { "DIAGRAMA_DE_CLASES","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
+        string []tokensReservadas = { "DIAGRAMA_DE_CLASES","PARAMETROS","NOMBRE","CLASE","CODIGO", "ATRIBUTOS","ATRIBUTO","VISIBILIDAD","TIPO","METODOS","METODO","RELACIONES","RELACION",
         "ENLACE"};
         StreamWriter dotArchivo;
         string[] Simbolos = { "[","]","*"};
@@ -61,12 +62,12 @@ namespace Practica1
             Analizador(texto);
             generarTablaErrores();
             generarTablaSimbolos();
-            //pintarTexto();
-            //generarArchivo(texto);
-            //crearHtml();
+            pintarTexto();
             conAnali++;
             listToken.Clear();
             errorToken.Clear();
+            contError = 0;
+            cont = 1;
         }
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -154,7 +155,7 @@ namespace Practica1
                         }
                         break;
                     case 1:
-                        if (Char.IsLetterOrDigit(concatenar) || Char.IsSymbol(concatenar))
+                        if (Char.IsLetterOrDigit(concatenar) || Char.IsSymbol(concatenar) || concatenar==' ' || concatenar == '_')
                         {
                             token += concatenar;
                         }
@@ -167,6 +168,7 @@ namespace Practica1
                         {
                             errores(token += concatenar,fila,columna);
                             columna++;
+                            contError++;
                             token = "";
                             mover = 0;
                         }
@@ -192,6 +194,7 @@ namespace Practica1
                     case 6:
                         errores(token += concatenar, fila, columna);
                         columna++;
+                        contError++;
                         token = "";
                         mover = 0;
                         break;
@@ -207,6 +210,7 @@ namespace Practica1
                         {
                             errores(token += concatenar, fila, columna);
                             columna++;
+                            contError++;
                             token = "";
                             mover = 0;
                         }
@@ -233,6 +237,12 @@ namespace Practica1
                         break;
                    
                 }
+            }
+            if (contError ==0) {
+                generarArchivo(cadena);
+                crearHtml();
+            } else if (contError > 1) {
+                MessageBox.Show("Hay errores lexicos");
             }
         }
         public void verificarReservadas(string token,int fila, int columna) {
