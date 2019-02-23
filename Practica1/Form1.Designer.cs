@@ -139,6 +139,7 @@ namespace Practica1
         {
             
             OpenFileDialog file = new OpenFileDialog();
+            file.Filter = "ddc files (*.ddc)|*.ddc|All files (*.*)|*.*";
             if (file.ShowDialog() == DialogResult.OK)
             {
                 path = file.FileName;

@@ -66,8 +66,6 @@ namespace Practica1
             conAnali++;
             listToken.Clear();
             errorToken.Clear();
-            //pintarCorchete();
-            //pintaAsterisco();
             contError = 0;
             cont = 1;
         }
@@ -78,9 +76,9 @@ namespace Practica1
             saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                TextWriter txt = new StreamWriter("C:\\Users\\Armando\\Desktop\\Ejemplos\\demo.txt");
-                txt.Write(idTexto.Text);
-                txt.Close();
+                string name = saveFileDialog1.FileName;
+                saveFileDialog1.InitialDirectory = @"c:\temp\";
+                File.WriteAllText(saveFileDialog1.FileName, idTexto.Text);
             }
         }
         public void crearHtml() {
@@ -741,11 +739,11 @@ namespace Practica1
             {
                 dotArchivo.Write("" + relacion);
                 dotArchivo.Close();
-                ExecuteCommand(@"dot -Tpng diagrama.dot -o diagrama.png");
+                ejecutar(@"dot -Tpng diagrama.dot -o diagrama.png");
             }
         }
 
-        static void ExecuteCommand(string _Command)
+        static void ejecutar(string _Command)
         {
             System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c " + _Command);
             procStartInfo.RedirectStandardOutput = true;
