@@ -87,8 +87,10 @@ namespace Practica1
             archivo.Write("<head>");
             archivo.Write("</head>");
             archivo.Write("<body>");
+            archivo.Write("<center>");
             archivo.Write("<H1>Diagrama de clases: "+ nombre2 + " </H1>");
             archivo.Write("<img src=\"C:\\Users\\Armando\\source\\repos\\Practica1\\Practica1\\bin\\Debug\\diagrama.png\"");
+            archivo.Write("</center>");
             archivo.Write("</body>");
             archivo.Write("</html>");
             archivo.Close();
@@ -409,6 +411,7 @@ namespace Practica1
                     tipoRela = "";
                     tipo3 = 0;
                     tipo2 = 0;
+                    contMetodo = 0;
                     visMetodo = ""; nombreMetodo = ""; tipoMetodo = ""; parametro = "";
                 }
                 else if (cadenas.Equals("*TIPO]"))
@@ -456,7 +459,7 @@ namespace Practica1
                 else if (cadenas.Equals("[*METODO]"))
                 {
                     tipo3++;
-                    textDiagr = textDiagr+ visMetodo + " " + nombreMetodo + "(" + parametro + ")" + " : " + tipoMetodo + "\\n" + "\n";
+                    textDiagr = textDiagr + visMetodo + " " + nombreMetodo + "(" + parametro + ")" + " : " + tipoMetodo + "\\n" + "\n";
                     if (tipo3 > 0 || nom > 0)
                     {
                         tipoMetodo = "";
