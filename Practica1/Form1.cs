@@ -62,7 +62,7 @@ namespace Practica1
             Analizador(texto);
             generarTablaErrores();
             generarTablaSimbolos();
-            pintarTexto(texto);
+            //pintarTexto(texto);
             conAnali++;
             listToken.Clear();
             errorToken.Clear();
@@ -163,7 +163,7 @@ namespace Practica1
                         }
                         break;
                     case 1:
-                        if (Char.IsLetterOrDigit(concatenar) || Char.IsSymbol(concatenar) || concatenar==' ' || concatenar == '_')
+                        if (Char.IsLetterOrDigit(concatenar) || Char.IsSymbol(concatenar) || concatenar==' ' || concatenar == '_' || concatenar == ',')
                         {
                             token += concatenar;
                         }
@@ -446,14 +446,7 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[*METODOS]"))
                 {
-                    tipo3++;
-                    textDiagr = textDiagr + " " + nombreMetodo + "(" + parametro + ")" + " : " + tipoMetodo + "\n";
-                    if (tipo3 > 0 || nom > 0)
-                    {
-                        tipoMetodo = "";
-                        nombreMetodo = "";
-                        parametro = "";
-                    }
+                  
                     cadenas = "";
                 }
                 else if (cadenas.Equals("[METODO]"))
@@ -462,6 +455,14 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[*METODO]"))
                 {
+                    tipo3++;
+                    textDiagr = textDiagr+ visMetodo + " " + nombreMetodo + "(" + parametro + ")" + " : " + tipoMetodo + "\\n" + "\n";
+                    if (tipo3 > 0 || nom > 0)
+                    {
+                        tipoMetodo = "";
+                        nombreMetodo = "";
+                        parametro = "";
+                    }
                     cadenas = "";
                 }
                 else if (cadenas.Equals("[ARAMETROS]"))
@@ -539,7 +540,7 @@ namespace Practica1
                         }
                         break;
                     case 2:
-                        if (Char.IsLetter(variable)) 
+                        if (Char.IsLetter(variable)|| Char.IsDigit(variable)) 
                         {
                                 nombre += variable;
                                 pos2 = 2;
@@ -571,6 +572,11 @@ namespace Practica1
                         } else if (cadenas.Equals("\"public\"")) {
                             visibilidad = "+";
                         
+                        }
+                        else if (cadenas.Equals("\"protected\""))
+                        {
+                            visibilidad = "#";
+
                         }
                         else if (variable == '[')
                         {
@@ -624,9 +630,9 @@ namespace Practica1
                         else if (variable == '[')
                         {
                             if (tipoRela.Equals("Asociacion")) {
-                                relacion ="[arrowhead=empty];"+ relacion;
+                                relacion ="[arrowhead=none];"+ relacion;
                             } else if (tipoRela.Equals("Agregacion")) {
-                                relacion = "[arrowhead=diamond];"+"\n"+ relacion;
+                                relacion = "[arrowhead=odiamond];" + "\n"+ relacion;
                             }
                             cadenas = "";
                             pos2 = 0; 
@@ -641,6 +647,7 @@ namespace Practica1
                         else if (variable == '[')
                         {
                             relacion = "clase"+codigo+ "->"+"clase"+enlace+" "+ relacion + "\n";
+                            enlace = "";
                             cadenas = "";
                             pos2 = 0;
                         }
@@ -653,7 +660,7 @@ namespace Practica1
                         }
                         else if (variable == '[')
                         {
-                            //textDiagr =  textDiagr +" "+ nombreMetodo+"()"+" : " ;
+                            //textDiagr =  textDiagr +" "+ nombreMetodo+"()"+" : " 
                             cadenas = "";
                             pos2 = 0;
                             nom++;
@@ -673,9 +680,14 @@ namespace Practica1
                             visMetodo = "+";
 
                         }
+                        else if (cadenas.Equals("\"protected\""))
+                        {
+                            visMetodo = "#";
+
+                        }
                         else if (variable == '[')
                         {
-                            textDiagr = textDiagr + visMetodo + " ";
+                            //textDiagr = textDiagr + visMetodo + " ";
                             cadenas = "";
                             pos2 = 0;
                         }
@@ -699,14 +711,14 @@ namespace Practica1
                         }
                         break;
                     case 11:
-                        if (Char.IsLetter(variable))
+                        if (Char.IsLetter(variable)|| Char.IsDigit(variable) || variable==',')
                         {
                             parametro += variable;
                             pos2 = 11;
                         }
                         else if (variable == '[')
                         {
-                           
+                       
                             cadenas = "";
                             pos2 = 0;
                            
