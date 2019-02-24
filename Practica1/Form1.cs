@@ -62,7 +62,7 @@ namespace Practica1
             Analizador(texto);
             generarTablaErrores();
             generarTablaSimbolos();
-            //pintarTexto(texto);
+            pintarTexto(texto);
             conAnali++;
             listToken.Clear();
             errorToken.Clear();
@@ -349,7 +349,7 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[RELACIONES]"))
                 {
-                    tipo2 =1;
+                    tipo2 = 1;
                     cadenas = "";
                 }
                 else if (cadenas.Equals("[RELACION]"))
@@ -358,7 +358,12 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[*RELACION]"))
                 {
+
+                    relacion = relacion + "clase" + codigo + "->" + "clase" + enlace + " " + tipoRela +";"+ "\n";
                     cadenas = "";
+                    enlace = "";
+                    tipoRela = "";
+
                 }
                 else if (cadenas.Equals("[*RELACIONES]"))
                 {
@@ -396,8 +401,8 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[*CLASE]"))
                 {
-                    textDiagr = textDiagr + "}\"];"+"\n";
-                    escribir(textDiagr,"",true);
+                    textDiagr = textDiagr + "}\"];" + "\n";
+                    escribir(textDiagr, "", true);
                     textDiagr = "";
                     cadenas = "";
                     nombre = "";
@@ -418,7 +423,7 @@ namespace Practica1
                 {
                     cadenas = "";
                 } else if (cadenas.Equals("[*DIAGRAMA_DE_CLASES]")) {
-                    escribir("", relacion+ "}",false);
+                    escribir("", relacion + "}", false);
                     cadenas = "";
                     textDiagr = "";
                     cadenas = "";
@@ -449,7 +454,7 @@ namespace Practica1
                 }
                 else if (cadenas.Equals("[*METODOS]"))
                 {
-                  
+
                     cadenas = "";
                 }
                 else if (cadenas.Equals("[METODO]"))
@@ -479,6 +484,8 @@ namespace Practica1
                 else if (cadenas.Equals("\n") || cadenas.Equals("\r") || cadenas.Equals("\t") || cadenas.Equals("\f") || cadenas.Equals(" "))
                 {
                     cadenas = "";
+                } else if (variable==' ') {
+                    Console.WriteLine();
                 }
                 switch (pos2) {
                     case 0:
@@ -633,9 +640,11 @@ namespace Practica1
                         else if (variable == '[')
                         {
                             if (tipoRela.Equals("Asociacion")) {
-                                relacion ="[arrowhead=none];"+ relacion;
+                                //relacion ="[arrowhead=none];" + "\n" + relacion;
+                                tipoRela = "[arrowhead=none]";
                             } else if (tipoRela.Equals("Agregacion")) {
-                                relacion = "[arrowhead=odiamond];" + "\n"+ relacion;
+                                //relacion = "[arrowhead=odiamond];" + "\n"+ relacion;
+                                tipoRela = "[arrowhead=odiamond]";
                             }
                             cadenas = "";
                             pos2 = 0; 
@@ -649,8 +658,8 @@ namespace Practica1
                         }
                         else if (variable == '[')
                         {
-                            relacion = "clase"+codigo+ "->"+"clase"+enlace+" "+ relacion + "\n";
-                            enlace = "";
+                            //relacion = "clase"+codigo+ "->"+"clase"+enlace+" "+ relacion + "\n";
+                            //enlace = "";
                             cadenas = "";
                             pos2 = 0;
                         }
@@ -756,6 +765,7 @@ namespace Practica1
                 dotArchivo.Close();
                 ejecutar(@"dot -Tpng diagrama.dot -o diagrama.png");
             }
+            Console.WriteLine(text);
         }
 
         static void ejecutar(string _Command)
